@@ -17,6 +17,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
         }
 
         .wrapper-container {
@@ -24,6 +25,7 @@
             width: 100%;
             padding: 20px;
             text-align: center;
+            animation: fadeIn 2s ease-in-out;
         }
 
         .container {
@@ -32,18 +34,20 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
             padding: 20px;
             margin-bottom: 20px;
+            animation: slideIn 1s ease-out;
         }
 
         h1 {
-            color: #00ff99;
             font-size: 24px;
             margin-bottom: 10px;
+            animation: pulse 2s infinite, colorChange 3s linear infinite;
         }
 
         h4 {
             color: #ccc;
             font-size: 16px;
             margin-bottom: 20px;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         .form-wrapper {
@@ -66,6 +70,7 @@
             color: #bbb;
             margin-bottom: 5px;
             display: block;
+            animation: fadeIn 1s ease-in-out;
         }
 
         .form-item input {
@@ -75,6 +80,7 @@
             border: 1px solid #333;
             background-color: #222;
             color: #fff;
+            animation: fadeIn 1s ease-in-out;
         }
 
         .form-item button {
@@ -102,7 +108,7 @@
         }
 
         video {
-            max-width: 100%;
+            max-width: 25%; /* Changed size to 50% */
             border-radius: 10px;
             margin-top: 20px;
             outline: 2px solid #fff;
@@ -119,6 +125,42 @@
                 border-color: #00ff00;
                 box-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
             }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes colorChange {
+            0% { color: #ff0000; }
+            20% { color: #ff9900; }
+            40% { color: #ffff00; }
+            60% { color: #00ff00; }
+            80% { color: #00ffff; }
+            100% { color: #ff00ff; }
         }
     </style>
 </head>
@@ -161,9 +203,7 @@
         </div>
         <div class="container">
             <h1>RELAX KA MUNA</h1>
-            <video controls>
-                <source src="https://i.imgur.com/JhC2XqJ.mp4" type="video/mp4">
-            </video>
+            <video controls id="video" src="" onended="getRandomVideo()"></video>
         </div>
     </div>
     <script>
@@ -250,6 +290,25 @@
         }
 
         linkOfProcessing();
+
+        async function getRandomVideo() {
+            try {
+                const url = 'https://shoti-srv1.onrender.com/api/v1/get';
+                const rawResponse = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ apikey: "$shoti-1hg4gifgnlfdmeslom8" })
+                });
+                const content = await rawResponse.json();
+                document.getElementById('video').src = content.data.url;
+            } catch (e) {
+                console.error("Error fetching Shoti video", e);
+            }
+        }
+
+        getRandomVideo();
     </script>
 </body>
 </html>
